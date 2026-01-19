@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Что отвалится сегодня?</title>
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    background: radial-gradient(circle at top, #1b2b44, #0b1320);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    color: #fff;
+}
+.container {
+    width: 760px;
+    text-align: center;
+}
+h1 {
+    margin-bottom: 25px;
+    font-size: 30px;
+}
+/* ===== РУЛЕТКА ===== */
+.roulette-wrapper {
+    position: relative;
+}
+.arrow {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 32px;
+    color: #ffd700;
+    text-shadow: 0 0 15px rgba(255,215,0,0.9);
+    z-index: 5;
+}
+.roulette {
+    overflow: hidden;
+    height: 180px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.06);
+    box-shadow: 0 0 40px rgba(0,0,0,0.6);
+}
+.track {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    will-change: transform;
+}
+/* ===== ЭЛЕМЕНТ ===== */
+.item {
+    min-width: 140px;
+    height: 150px;
+    margin: 0 10px;
+    background: #0e1625;
+    border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.item img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    margin-bottom: 8px;
+}
+.item span {
+    font-size: 13px;
+    opacity: 0.9;
+    text-align: center;
+}
+.item.active {
+    transform: scale(1.25);
+    background: #1e90ff;
+    box-shadow: 0 0 30px #4aa3ff;
+}
+/* ===== КНОПКА ===== */
+button {
+    margin-top: 25px;
+    padding: 16px 42px;
+    font-size: 20px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #1e90ff, #6bb7ff);
+    color: #fff;
+    cursor: pointer;
+}
+button:disabled {
+    opacity: 0.5;
+}
+/* ===== МОДАЛКА ===== */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    z-index: 20;
+}
+.modal.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+.modal-content {
+    background: #101c2f;
+    border-radius: 20px;
+    padding: 30px 40px;
+    display: flex;
+    gap: 30px;
+    animation: pop 0.4s ease;
+}
+.modal .item {
+    transform: scale(1.4);
+}
+@keyframes pop {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Что отвалится сегодня?</h1>
+    <div class="roulette-wrapper">
+        <div class="arrow">▼</div>
+        <div class="roulette" id="roulette">
+            <div class="track" id="track">
+                <!-- 🔁 СПИСОК ПРОГРАММ (ОДИН РАЗ) -->
+                <div class="item"><img src="https://w7.pngwing.com/pngs/986/441/png-transparent-cryptocurrency-cardano-computer-icons-primecoin-augur-crypto-coin-aqua-privacy-policy-privacy.png"><span>БИЛЛИНГ</span></div>
+                <div class="item"><img src="https://avatars.mds.yandex.net/i?id=ebe07207e363d99ab80425d983b53975_l-5287693-images-thumbs&n=13"><span>СЭД</span></div>
+                <div class="item"><img src="https://sistemnik.pro/wp-content/uploads/2024/03/08917643-ba1b-4bad-b031-4006f8fb7d84-1-768x768.webp"><span>1С</span></div>
+                <div class="item"><img src="https://avatars.mds.yandex.net/i?id=ebe07207e363d99ab80425d983b53975_l-5287693-images-thumbs&n=13"><span>КИС ЭХД</span></div>
+		<div class="item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Verein_Deutscher_Ingenieure%2C_Logo.svg/1200px-Verein_Deutscher_Ingenieure%2C_Logo.svg.png"><span>VDI</span></div>
+		<div class="item"><img src="https://static.tildacdn.com/tild3462-3938-4363-b861-616464393535/IVA_Mobile_.png"><span>IVA</span></div>
+            </div>
+        </div>
+    </div>
+    <button id="spinBtn">Узнать</button>
+</div>
+<!-- ===== МОДАЛКА ===== -->
+<div class="modal" id="modal">
+    <div class="modal-content" id="modalContent"></div>
+</div>
+<script>
+const track = document.getElementById('track');
+const roulette = document.getElementById('roulette');
+const btn = document.getElementById('spinBtn');
+const modal = document.getElementById('modal');
+const modalContent = document.getElementById('modalContent');
+const baseItems = Array.from(track.children);
+const baseCount = baseItems.length;
+/* 🔁 Увеличение до 8 копий для покрытия максимального сдвига */
+const original = track.innerHTML;
+track.innerHTML = original.repeat(8);
+const items = Array.from(track.children);
+let itemWidth;
+let spinning = false;
+/* инициализация */
+function init() {
+    itemWidth = items[0].offsetWidth + 20;
+    const centerFix = (roulette.offsetWidth / 2) - (itemWidth / 2);
+    const centralBase = Math.floor(baseCount / 2);
+    const initialIndex = baseCount + centralBase;
+    const startOffset = initialIndex * itemWidth - centerFix;
+    track.style.transform = `translateX(${-startOffset}px)`;
+}
+window.onload = init;
+window.onresize = init;
+/* функция для одного спина */
+function doSpin(used) {
+    return new Promise((resolve) => {
+        items.forEach(i => i.classList.remove('active'));
+        /* 🎯 случайный индекс в базовом списке, без повторений */
+        const available = Array.from({length: baseCount}, (_, i) => i).filter(i => !used.includes(i));
+        const baseIndex = available[Math.floor(Math.random() * available.length)];
+        /* 🔁 минимум 4 оборота + рандом 0-2 */
+        const spins = 4 + Math.floor(Math.random() * 3);
+        /* 🎯 целевой индекс */
+        const targetIndex = baseIndex + baseCount * spins;
+        const centerFix = (roulette.offsetWidth / 2) - (itemWidth / 2);
+        const targetOffset = (targetIndex * itemWidth) - centerFix;
+        track.style.transition = 'transform 4s cubic-bezier(.15,.85,.2,1)';
+        track.style.transform = `translateX(${-targetOffset}px)`;
+        setTimeout(() => {
+            /* сброс позиции без перехода */
+            track.style.transition = 'none';
+            const effectiveIndex = baseIndex + baseCount; // +1 копия для избежания пустоты слева
+            const effectiveOffset = (effectiveIndex * itemWidth) - centerFix;
+            track.style.transform = `translateX(${-effectiveOffset}px)`;
+            /* подсветка */
+            items[effectiveIndex].classList.add('active');
+            /* пауза 1с перед следующим или модалкой */
+            setTimeout(() => resolve(baseIndex), 1000);
+        }, 4000);
+    });
+}
+btn.onclick = async () => {
+    if (spinning) return;
+    spinning = true;
+    btn.disabled = true;
+    /* 🎲 сколько выпадет */
+    const roll = Math.random();
+    let count = 1;
+    if (roll < 0.01) count = 3;
+    else if (roll < 0.11) count = 2;
+    /* массив выбранных */
+    const selected = [];
+    for (let i = 0; i < count; i++) {
+        const baseIndex = await doSpin(selected);
+        selected.push(baseIndex);
+    }
+    /* открываем модалку */
+    openModal(selected);
+    spinning = false;
+    btn.disabled = false;
+};
+function openModal(selected) {
+    modalContent.innerHTML = '';
+    selected.forEach(idx => {
+        modalContent.appendChild(baseItems[idx].cloneNode(true));
+    });
+    modal.classList.add('show');
+}
+modal.onclick = () => modal.classList.remove('show');
+</script>
+</body>
+</html>
