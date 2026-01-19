@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Что отвалится сегодня?</title>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -13,58 +15,87 @@
 
 body {
     min-height: 100vh;
-    background: linear-gradient(135deg, #003d82 0%, #002855 50%, #001a3d 100%);
+    background: radial-gradient(circle at center, #002855 0%, #001a3d 70%, #000d1a 100%);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: 'Inter', sans-serif;
     color: #fff;
     padding: 20px;
     overflow-x: hidden;
 }
 
+/* Кинематографичная текстура шума */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.04;
+    pointer-events: none;
+    z-index: 1;
+}
+
 .container {
+    position: relative;
+    z-index: 2;
     width: 100%;
     max-width: 1000px;
     text-align: center;
+    opacity: 0;
+    transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity;
 }
 
 h1 {
-    font-size: clamp(28px, 5vw, 48px);
-    font-weight: 700;
-    margin-bottom: clamp(30px, 5vh, 50px);
+    font-size: clamp(36px, 7vw, 64px);
+    font-weight: 800;
+    margin-bottom: clamp(40px, 8vh, 60px);
     color: #ffffff;
-    letter-spacing: 0.5px;
+    letter-spacing: -0.04em;
+    text-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
 
 .roulette-wrapper {
     position: relative;
-    margin-bottom: clamp(30px, 5vh, 40px);
+    margin-bottom: clamp(40px, 6vh, 60px);
 }
 
 .arrow {
     position: absolute;
-    top: -35px;
+    top: -50px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: clamp(40px, 6vw, 56px);
     z-index: 10;
     color: #e30613;
-    filter: drop-shadow(0 4px 12px rgba(227, 6, 19, 0.6));
-    pointer-events: none;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    font-size: 28px;
+    will-change: backdrop-filter;
 }
 
 .roulette {
     overflow: hidden;
-    height: clamp(200px, 30vh, 280px);
-    border-radius: clamp(20px, 3vw, 32px);
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(20px);
+    height: clamp(240px, 35vh, 320px);
+    border-radius: 56px;
+    background: rgba(255, 255, 255, 0.01);
+    backdrop-filter: blur(50px);
+    -webkit-backdrop-filter: blur(50px);
     box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+        0 40px 100px rgba(0, 0, 0, 0.6),
+        inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     position: relative;
+    will-change: backdrop-filter;
 }
 
 .track {
@@ -72,130 +103,125 @@ h1 {
     align-items: center;
     height: 100%;
     will-change: transform;
-    padding: 0 10px;
+    padding: 0 30px;
+    position: relative;
 }
 
 .item {
-    min-width: clamp(140px, 20vw, 200px);
-    height: clamp(160px, 25vh, 220px);
-    margin: 0 clamp(8px, 1.5vw, 15px);
-    background: linear-gradient(145deg, rgba(30, 30, 60, 0.8), rgba(20, 20, 40, 0.9));
-    border-radius: clamp(18px, 2.5vw, 28px);
+    min-width: clamp(180px, 25vw, 240px);
+    height: clamp(200px, 30vh, 260px);
+    margin: 0 clamp(12px, 2.5vw, 25px);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: clamp(15px, 2vw, 25px);
-    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    padding: 35px;
+    transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    position: relative;
+}
+
+.item img {
+    width: clamp(90px, 15vw, 130px);
+    height: clamp(90px, 15vw, 130px);
+    object-fit: contain;
+    margin-bottom: 25px;
+    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.4));
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.item span {
+    font-size: 13px;
+    font-weight: 800;
+    opacity: 0.4;
+    text-align: center;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+
+.item.active {
+    transform: scale(1.08);
+    background: linear-gradient(145deg, #0066cc, #e30613);
     box-shadow: 
-        0 4px 20px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+        0 0 70px rgba(0, 102, 204, 0.7),
+        0 0 140px rgba(227, 6, 19, 0.5);
+    border-color: rgba(255, 255, 255, 0.4);
+    animation: activeGlow 2.5s ease-in-out infinite;
+}
+
+@keyframes activeGlow {
+    0%, 100% { filter: brightness(1) saturate(1); transform: scale(1.08); }
+    50% { filter: brightness(1.2) saturate(1.2); transform: scale(1.1); }
+}
+
+button#spinBtn {
+    padding: 26px 90px;
+    font-size: 16px;
+    font-weight: 800;
+    border: none;
+    border-radius: 100px;
+    background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    box-shadow: 0 25px 50px rgba(0, 102, 204, 0.5);
     position: relative;
     overflow: hidden;
 }
 
-.item::before {
+button#spinBtn::before {
     content: '';
     position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(0, 102, 204, 0) 0%, rgba(0, 102, 204, 0.1) 100%);
-    opacity: 0;
-    transition: opacity 0.5s ease;
+    top: 0;
+    left: -150%;
+    width: 150%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: shimmer 4s infinite;
 }
 
-.item:hover::before {
-    opacity: 1;
+@keyframes shimmer {
+    0% { left: -150%; }
+    30%, 100% { left: 150%; }
 }
 
-.item img {
-    width: clamp(70px, 12vw, 110px);
-    height: clamp(70px, 12vw, 110px);
-    object-fit: contain;
-    margin-bottom: clamp(10px, 2vh, 15px);
-    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
-    transition: transform 0.3s ease;
-}
-
-.item:hover img {
-    transform: scale(1.1) rotate(5deg);
-}
-
-.item span {
-    font-size: clamp(14px, 2vw, 18px);
-    font-weight: 700;
-    opacity: 0.95;
-    text-align: center;
-    letter-spacing: 0.5px;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-}
-
-.item.active {
-    transform: scale(1.15);
-    background: linear-gradient(145deg, #0066cc, #e30613);
-    box-shadow: 
-        0 0 60px rgba(0, 102, 204, 0.8),
-        0 0 120px rgba(227, 6, 19, 0.5),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.3);
-    animation: pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { box-shadow: 0 0 60px rgba(0, 102, 204, 0.8), 0 0 120px rgba(227, 6, 19, 0.5); }
-    50% { box-shadow: 0 0 80px rgba(0, 102, 204, 1), 0 0 160px rgba(227, 6, 19, 0.7); }
-}
-
-button {
-    padding: clamp(16px, 2.5vh, 22px) clamp(50px, 8vw, 70px);
-    font-size: clamp(18px, 2.5vw, 24px);
-    font-weight: 600;
-    border: 2px solid #0066cc;
-    border-radius: clamp(8px, 1.5vw, 12px);
-    background: #0066cc;
-    color: #fff;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-}
-
-button::before {
-    display: none;
-}
-
-button:hover {
-    background: #0052a3;
-    border-color: #0052a3;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
-}
-
-button:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(0, 102, 204, 0.2);
-}
-
-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
+button#spinBtn:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow: 0 35px 70px rgba(0, 102, 204, 0.6);
+    background: linear-gradient(135deg, #0077ee 0%, #0055bb 100%);
 }
 
 .modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(12px);
+    background: radial-gradient(circle at center, rgba(0, 26, 61, 0.98) 0%, rgba(0, 13, 26, 1) 100%);
+    backdrop-filter: blur(80px);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.4s ease;
+    transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
     z-index: 1000;
     padding: 20px;
+}
+
+/* Технологичная сетка на фоне модального окна */
+.modal::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+    mask-image: radial-gradient(circle at center, black, transparent 80%);
+    pointer-events: none;
 }
 
 .modal.show {
@@ -203,132 +229,160 @@ button:disabled {
     pointer-events: auto;
 }
 
+.modal-title {
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.5em;
+    color: rgba(255, 255, 255, 0.3);
+    margin-bottom: 80px;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+.modal.show .modal-title {
+    animation: titleReveal 2s cubic-bezier(0.22, 1, 0.36, 1) 0.4s forwards;
+}
+
+@keyframes titleReveal {
+    to { opacity: 1; letter-spacing: 2.5em; transform: translateY(0); }
+}
+
 .modal-content {
     display: flex;
     flex-wrap: wrap;
-    gap: clamp(20px, 3vw, 40px);
+    gap: 60px;
     justify-content: center;
-    max-width: 90vw;
-    margin-bottom: clamp(30px, 5vh, 40px);
+    max-width: 95vw;
+    margin-bottom: 120px;
 }
 
 .modal .item {
-    transform: scale(1.2);
-    animation: itemPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    opacity: 0;
+    transform: scale(0.8);
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(40px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 80px 160px rgba(0,0,0,0.8);
+    overflow: hidden;
+    position: relative;
 }
 
-.modal .item:nth-child(1) { animation-delay: 0.1s; }
-.modal .item:nth-child(2) { animation-delay: 0.2s; }
-.modal .item:nth-child(3) { animation-delay: 0.3s; }
+.modal.show .item {
+    animation: 
+        itemReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+        floating 6s ease-in-out infinite 0.8s;
+}
+
+@keyframes floating {
+    0%, 100% { transform: translateY(0) scale(1.4); }
+    50% { transform: translateY(-15px) scale(1.42); }
+}
+
+/* Эффект "жидкого" светового сканирования */
+.modal .item::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255,255,255,0.01) 30%, 
+        rgba(255,255,255,0.15) 50%, 
+        rgba(255,255,255,0.01) 70%, 
+        transparent);
+    transform: skewX(-25deg);
+    animation: lightSweep 5s infinite 0.8s;
+}
+
+@keyframes lightSweep {
+    0% { left: -150%; }
+    40%, 100% { left: 250%; }
+}
+
+.modal .item:nth-child(1) { animation-delay: 0.2s; }
+.modal .item:nth-child(2) { animation-delay: 0.4s; }
+.modal .item:nth-child(3) { animation-delay: 0.6s; }
+
+@keyframes itemReveal {
+    0% { 
+        opacity: 0; 
+        transform: scale(0.5) translateY(50px); 
+        filter: blur(40px) brightness(0) contrast(2);
+    }
+    50% {
+        opacity: 1;
+        filter: blur(10px) brightness(2) contrast(1);
+    }
+    100% { 
+        opacity: 1; 
+        transform: scale(1.4) translateY(0); 
+        filter: blur(0) brightness(1) contrast(1);
+    }
+}
+
+#emojiSpan {
+    font-size: 70px; /* Гигантский смайл */
+    line-height: 1;
+    margin-bottom: 20px;
+}
 
 .close-btn {
-    background: linear-gradient(145deg, rgba(30, 30, 60, 0.95), rgba(20, 20, 40, 0.98));
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: clamp(12px, 2vw, 16px);
-    padding: clamp(12px, 2vh, 18px) clamp(40px, 6vw, 60px);
-    font-size: clamp(20px, 3vw, 28px);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(20px);
+    border-radius: 60px;
+    padding: 40px 100px;
+    font-size: 24px;
+    font-weight: 800;
     color: #fff;
     cursor: pointer;
     display: flex;
+    flex-direction: column; /* Вертикальная компоновка */
     align-items: center;
-    gap: 12px;
-    transition: all 0.3s ease;
-    animation: btnPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s both;
-    box-shadow: 
-        0 8px 24px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    justify-content: center;
+    transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity: 0;
+    transform: translateY(40px);
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+}
+
+.modal.show .close-btn {
+    animation: btnReveal 1.5s cubic-bezier(0.22, 1, 0.36, 1) 1s forwards;
 }
 
 .close-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 
-        0 12px 32px rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
+    color: #fff;
 }
 
-.close-btn:active {
-    transform: translateY(0);
+@keyframes btnReveal {
+    to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes itemPop {
-    0% { 
-        transform: scale(0) rotate(-180deg); 
-        opacity: 0;
-    }
-    100% { 
-        transform: scale(1.2) rotate(0deg); 
-        opacity: 1;
-    }
-}
-
-@keyframes btnPop {
-    from { 
-        transform: scale(0.5); 
-        opacity: 0; 
-    }
-    to { 
-        transform: scale(1); 
-        opacity: 1; 
-    }
-}
-
-/* Мобильная оптимизация */
 @media (max-width: 768px) {
-    .roulette {
-        height: clamp(180px, 28vh, 240px);
+    .roulette { height: 280px; }
+    .item { min-width: 200px; height: 220px; }
+    .modal-content { flex-direction: column; gap: 50px; }
+    .modal .item { transform: scale(0.9); }
+    @keyframes itemReveal { 
+        0% { opacity: 0; transform: scale(0.8); filter: blur(20px); }
+        100% { opacity: 1; transform: scale(1.2); filter: blur(0); }
     }
-    
-    .item {
-        min-width: clamp(120px, 25vw, 160px);
-        height: clamp(140px, 22vh, 180px);
-    }
-    
-    .modal-content {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .track {
-        padding: 0 5px;
-    }
-}
-
-@media (max-width: 480px) {
-    body {
-        padding: 15px;
-    }
-    
-    .item {
-        min-width: 110px;
-        height: 130px;
-        margin: 0 6px;
-    }
-    
-    .item img {
-        width: 60px;
-        height: 60px;
-    }
-    
-    .modal .item {
-        transform: scale(1.1);
-    }
-}
-
-/* Accessibility */
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
+    @keyframes floating {
+        0%, 100% { transform: translateY(0) scale(1.2); }
+        50% { transform: translateY(-8px) scale(1.21); }
     }
 }
 </style>
 </head>
 <body>
-<div class="container">
+<div class="container" id="mainContainer">
     <h1>Что отвалится сегодня?</h1>
     <div class="roulette-wrapper">
         <div class="arrow">▼</div>
@@ -347,6 +401,7 @@ button:disabled {
 </div>
 
 <div class="modal" id="modal">
+    <div class="modal-title">Результат</div>
     <div class="modal-content" id="modalContent"></div>
     <button class="close-btn" id="closeBtn">
         <span id="emojiSpan">😢</span>
@@ -362,157 +417,118 @@ const modal = document.getElementById('modal');
 const modalContent = document.getElementById('modalContent');
 const closeBtn = document.getElementById('closeBtn');
 const emojiSpan = document.getElementById('emojiSpan');
+const mainContainer = document.getElementById('mainContainer');
 
-// Массив негативных эмодзи
 const sadEmojis = ['😢', '😭', '😡', '😠', '🤬', '😤', '😞', '😔', '😩', '😫'];
-
-// Базовые элементы (оригинальные)
 const baseItems = Array.from(track.children);
 const baseCount = baseItems.length;
-
-// Создаём достаточно копий для бесконечной прокрутки
 const COPIES = 20;
+
 track.innerHTML = track.innerHTML.repeat(COPIES);
 const allItems = Array.from(track.children);
 
-let itemWidth = 0;
-let rouletteCenter = 0;
 let spinning = false;
 
-// Инициализация и расчёт размеров
 function init() {
-    const firstItem = allItems[0];
-    const style = window.getComputedStyle(firstItem);
+    const rCenter = roulette.clientWidth / 2;
+    const startBaseIndex = Math.floor(Math.random() * baseCount);
+    const startIndex = Math.floor(COPIES / 2) * baseCount + startBaseIndex;
+    const targetItem = allItems[startIndex];
+    const itemCenterInTrack = targetItem.offsetLeft + targetItem.offsetWidth / 2;
     
-    // Полная ширина элемента включая margin
-    itemWidth = firstItem.offsetWidth + 
-                parseFloat(style.marginLeft) + 
-                parseFloat(style.marginRight);
-    
-    // Центр рулетки
-    rouletteCenter = roulette.offsetWidth / 2;
-    
-    // Стартовая позиция - центрируем средний элемент средней копии
-    const middleCopy = Math.floor(COPIES / 2);
-    const middleItem = Math.floor(baseCount / 2);
-    const startIndex = middleCopy * baseCount + middleItem;
-    
-    // Устанавливаем начальную позицию БЕЗ перерисовки
-    const offset = startIndex * itemWidth - rouletteCenter + (itemWidth / 2);
     track.style.transition = 'none';
-    track.style.transform = `translateX(${-offset}px)`;
+    track.style.transform = `translateX(${rCenter - itemCenterInTrack}px)`;
+    
+    requestAnimationFrame(() => {
+        mainContainer.style.opacity = '1';
+    });
 }
 
-// Один спин
 function doSpin(usedIndices) {
     return new Promise((resolve) => {
-        // Убираем активный класс
         allItems.forEach(item => item.classList.remove('active'));
         
-        // Выбираем случайный элемент, исключая уже использованные
         const availableIndices = Array.from({length: baseCount}, (_, i) => i)
             .filter(i => !usedIndices.includes(i));
         const targetBaseIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
         
-        // Минимум 3 полных круга + случайные обороты (итого 3-5 кругов)
-        const minSpins = 3;
-        const extraSpins = Math.floor(Math.random() * 3);
-        const fullSpins = minSpins + extraSpins;
+        const rCenter = roulette.clientWidth / 2;
+        const middleCopy = Math.floor(COPIES / 2);
+        const spins = 3 + Math.floor(Math.random() * 2);
+        const targetIndex = (middleCopy + spins) * baseCount + targetBaseIndex;
         
-        // Текущая позиция трека
-        const currentTransform = track.style.transform;
-        const currentMatch = currentTransform.match(/translateX\((-?\d+\.?\d*)px\)/);
-        const currentOffset = currentMatch ? parseFloat(currentMatch[1]) : 0;
+        const targetItem = allItems[targetIndex];
+        const itemCenterInTrack = targetItem.offsetLeft + targetItem.offsetWidth / 2;
+        const finalTranslateX = rCenter - itemCenterInTrack;
         
-        // Вычисляем текущий индекс
-        const currentPosition = Math.abs(currentOffset);
-        const currentIndex = Math.round(currentPosition / itemWidth);
+        const randomShift = (Math.random() - 0.5) * (targetItem.offsetWidth * 0.7);
+        const initialStopX = finalTranslateX + randomShift;
         
-        // Целевой индекс - добавляем полные обороты и целевую позицию
-        const targetIndex = currentIndex + (fullSpins * baseCount) + targetBaseIndex;
-        
-        // Точное смещение для центрирования элемента под стрелкой
-        const exactOffset = targetIndex * itemWidth - rouletteCenter + (itemWidth / 2);
-        
-        // Случайное недокручивание с бОльшим разбросом (15-45% ширины элемента)
-        const randomUndershoot = itemWidth * (0.15 + Math.random() * 0.3);
-        const offsetWithUndershoot = exactOffset - randomUndershoot;
-        
-        // Основная анимация - останавливаемся НЕ доезжая
-        track.style.transition = 'transform 4.5s cubic-bezier(0.17, 0.67, 0.12, 0.99)';
-        track.style.transform = `translateX(${-offsetWithUndershoot}px)`;
+        track.style.transition = 'transform 3s cubic-bezier(0.15, 0.8, 0.3, 1)';
+        track.style.transform = `translateX(${initialStopX}px)`;
         
         setTimeout(() => {
-            // Быстрая докрутка до точного центра
-            track.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
-            track.style.transform = `translateX(${-exactOffset}px)`;
+            track.style.transition = 'transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            track.style.transform = `translateX(${finalTranslateX}px)`;
             
             setTimeout(() => {
-                // Активируем элемент под стрелкой
-                allItems[targetIndex].classList.add('active');
+                targetItem.classList.add('active');
                 
-                // Небольшая пауза, затем перемещаемся в безопасную зону БЕЗ ВИДИМЫХ ИЗМЕНЕНИЙ
+                // Драматическая пауза (саспенс) перед показом результата
                 setTimeout(() => {
-                    // Сохраняем индекс выбранного элемента для возврата
-                    const selectedBaseIndex = targetBaseIndex;
+                    const safeIndex = middleCopy * baseCount + targetBaseIndex;
+                    const safeItem = allItems[safeIndex];
                     
-                    // Переносим в среднюю копию для бесконечности
-                    const middleCopy = Math.floor(COPIES / 2);
-                    const safeIndex = middleCopy * baseCount + selectedBaseIndex;
+                    const noAnim = 'none';
+                    track.style.transition = noAnim;
+                    targetItem.style.transition = noAnim;
+                    safeItem.style.transition = noAnim;
                     
-                    // Убираем активный класс со старой позиции
-                    allItems[targetIndex].classList.remove('active');
+                    safeItem.classList.add('active');
+                    const safeCenterInTrack = safeItem.offsetLeft + safeItem.offsetWidth / 2;
+                    track.style.transform = `translateX(${rCenter - safeCenterInTrack}px)`;
+                    targetItem.classList.remove('active');
                     
-                    // Перемещаемся БЕЗ анимации
-                    track.style.transition = 'none';
-                    const safeOffset = safeIndex * itemWidth - rouletteCenter + (itemWidth / 2);
-                    track.style.transform = `translateX(${-safeOffset}px)`;
+                    track.offsetHeight;
                     
-                    // Активируем элемент в новой позиции
-                    allItems[safeIndex].classList.add('active');
-                    
-                    // Пауза перед следующим спином
-                    setTimeout(() => resolve(selectedBaseIndex), 600);
-                }, 100);
-            }, 300);
-        }, 4500);
+                    requestAnimationFrame(() => {
+                        setTimeout(() => {
+                            track.style.transition = '';
+                            targetItem.style.transition = '';
+                            safeItem.style.transition = '';
+                            setTimeout(() => resolve(targetBaseIndex), 10);
+                        }, 10);
+                    });
+                }, 700); // 0.7 секунды саспенса
+            }, 50);
+        }, 3000);
     });
 }
 
-// Обработчик кнопки
 btn.onclick = async () => {
     if (spinning) return;
-    
     spinning = true;
     btn.disabled = true;
     
-    // Определяем количество выпавших элементов
     const roll = Math.random();
     let count = 1;
-    if (roll < 0.01) count = 3;      // 1% - три элемента
-    else if (roll < 0.11) count = 2; // 10% - два элемента
+    if (roll < 0.01) count = 3;
+    else if (roll < 0.11) count = 2;
     
     const selectedIndices = [];
-    
-    // Выполняем спины
     for (let i = 0; i < count; i++) {
         const baseIndex = await doSpin(selectedIndices);
         selectedIndices.push(baseIndex);
     }
     
-    // Показываем результат
     openModal(selectedIndices);
-    
     spinning = false;
     btn.disabled = false;
 };
 
-// Открытие модального окна
 function openModal(selectedIndices) {
-    // Выбираем случайный грустный эмодзи
     const randomEmoji = sadEmojis[Math.floor(Math.random() * sadEmojis.length)];
     emojiSpan.textContent = randomEmoji;
-    
     modalContent.innerHTML = '';
     selectedIndices.forEach(idx => {
         const clone = baseItems[idx].cloneNode(true);
@@ -522,13 +538,13 @@ function openModal(selectedIndices) {
     modal.classList.add('show');
 }
 
-// Закрытие модального окна только по кнопке
-closeBtn.onclick = () => {
-    modal.classList.remove('show');
-};
+closeBtn.onclick = () => modal.classList.remove('show');
 
-// Инициализация при загрузке и изменении размера
-window.addEventListener('load', init);
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
 window.addEventListener('resize', init);
 </script>
 </body>
