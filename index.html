@@ -213,15 +213,8 @@ button:disabled {
 }
 
 .modal .item {
-    background: transparent;
-    border: none;
-    box-shadow: none;
     transform: scale(1.2);
     animation: itemPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-.modal .item::before {
-    display: none;
 }
 
 .modal .item:nth-child(1) { animation-delay: 0.1s; }
@@ -356,7 +349,7 @@ button:disabled {
 <div class="modal" id="modal">
     <div class="modal-content" id="modalContent"></div>
     <button class="close-btn" id="closeBtn">
-        <span>😢</span>
+        <span id="emojiSpan">😢</span>
         <span>Ох!</span>
     </button>
 </div>
@@ -368,6 +361,10 @@ const btn = document.getElementById('spinBtn');
 const modal = document.getElementById('modal');
 const modalContent = document.getElementById('modalContent');
 const closeBtn = document.getElementById('closeBtn');
+const emojiSpan = document.getElementById('emojiSpan');
+
+// Массив негативных эмодзи
+const sadEmojis = ['😢', '😭', '😡', '😠', '🤬', '😤', '😞', '😔', '😩', '😫'];
 
 // Базовые элементы (оригинальные)
 const baseItems = Array.from(track.children);
@@ -400,31 +397,10 @@ function init() {
     const middleItem = Math.floor(baseCount / 2);
     const startIndex = middleCopy * baseCount + middleItem;
     
-    resetPosition(startIndex);
-}
-
-// Сброс позиции на указанный индекс без анимации
-function resetPosition(index) {
+    // Устанавливаем начальную позицию БЕЗ перерисовки
+    const offset = startIndex * itemWidth - rouletteCenter + (itemWidth / 2);
     track.style.transition = 'none';
-    const offset = index * itemWidth - rouletteCenter + (itemWidth / 2);
     track.style.transform = `translateX(${-offset}px)`;
-    
-    // Принудительный reflow для применения изменений
-    track.offsetHeight;
-}
-
-// Находим элемент под стрелкой по текущей позиции трека
-function getItemUnderArrow() {
-    const currentTransform = track.style.transform;
-    const currentMatch = currentTransform.match(/translateX\((-?\d+\.?\d*)px\)/);
-    const currentOffset = currentMatch ? parseFloat(currentMatch[1]) : 0;
-    
-    // Вычисляем позицию центра рулетки
-    const centerPosition = Math.abs(currentOffset);
-    const centerIndex = Math.round(centerPosition / itemWidth);
-    
-    // Возвращаем индекс в базовом массиве
-    return centerIndex % baseCount;
 }
 
 // Один спин
@@ -458,8 +434,8 @@ function doSpin(usedIndices) {
         // Точное смещение для центрирования элемента под стрелкой
         const exactOffset = targetIndex * itemWidth - rouletteCenter + (itemWidth / 2);
         
-        // Случайное недокручивание (20-30% ширины элемента)
-        const randomUndershoot = itemWidth * (0.2 + Math.random() * 0.1);
+        // Случайное недокручивание с бОльшим разбросом (15-45% ширины элемента)
+        const randomUndershoot = itemWidth * (0.15 + Math.random() * 0.3);
         const offsetWithUndershoot = exactOffset - randomUndershoot;
         
         // Основная анимация - останавливаемся НЕ доезжая
@@ -475,18 +451,28 @@ function doSpin(usedIndices) {
                 // Активируем элемент под стрелкой
                 allItems[targetIndex].classList.add('active');
                 
-                // Небольшая пауза, затем перемещаемся в безопасную зону
+                // Небольшая пауза, затем перемещаемся в безопасную зону БЕЗ ВИДИМЫХ ИЗМЕНЕНИЙ
                 setTimeout(() => {
+                    // Сохраняем индекс выбранного элемента для возврата
+                    const selectedBaseIndex = targetBaseIndex;
+                    
                     // Переносим в среднюю копию для бесконечности
                     const middleCopy = Math.floor(COPIES / 2);
-                    const safeIndex = middleCopy * baseCount + targetBaseIndex;
+                    const safeIndex = middleCopy * baseCount + selectedBaseIndex;
                     
+                    // Убираем активный класс со старой позиции
                     allItems[targetIndex].classList.remove('active');
-                    resetPosition(safeIndex);
+                    
+                    // Перемещаемся БЕЗ анимации
+                    track.style.transition = 'none';
+                    const safeOffset = safeIndex * itemWidth - rouletteCenter + (itemWidth / 2);
+                    track.style.transform = `translateX(${-safeOffset}px)`;
+                    
+                    // Активируем элемент в новой позиции
                     allItems[safeIndex].classList.add('active');
                     
                     // Пауза перед следующим спином
-                    setTimeout(() => resolve(targetBaseIndex), 600);
+                    setTimeout(() => resolve(selectedBaseIndex), 600);
                 }, 100);
             }, 300);
         }, 4500);
@@ -523,6 +509,10 @@ btn.onclick = async () => {
 
 // Открытие модального окна
 function openModal(selectedIndices) {
+    // Выбираем случайный грустный эмодзи
+    const randomEmoji = sadEmojis[Math.floor(Math.random() * sadEmojis.length)];
+    emojiSpan.textContent = randomEmoji;
+    
     modalContent.innerHTML = '';
     selectedIndices.forEach(idx => {
         const clone = baseItems[idx].cloneNode(true);
