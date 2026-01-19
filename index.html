@@ -2,127 +2,304 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Что отвалится сегодня?</title>
 <style>
-body {
+* {
     margin: 0;
-    height: 100vh;
-    background: radial-gradient(circle at top, #1b2b44, #0b1320);
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #003d82 0%, #002855 50%, #001a3d 100%);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     color: #fff;
+    padding: 20px;
+    overflow-x: hidden;
 }
+
 .container {
-    width: 760px;
+    width: 100%;
+    max-width: 1000px;
     text-align: center;
 }
+
 h1 {
-    margin-bottom: 25px;
-    font-size: 30px;
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 700;
+    margin-bottom: clamp(30px, 5vh, 50px);
+    color: #ffffff;
+    letter-spacing: 0.5px;
 }
-/* ===== РУЛЕТКА ===== */
+
 .roulette-wrapper {
     position: relative;
+    margin-bottom: clamp(30px, 5vh, 40px);
 }
+
 .arrow {
     position: absolute;
-    top: -18px;
+    top: -35px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 32px;
-    color: #ffd700;
-    text-shadow: 0 0 15px rgba(255,215,0,0.9);
-    z-index: 5;
+    font-size: clamp(40px, 6vw, 56px);
+    z-index: 10;
+    color: #e30613;
+    filter: drop-shadow(0 4px 12px rgba(227, 6, 19, 0.6));
+    pointer-events: none;
 }
+
 .roulette {
     overflow: hidden;
-    height: 180px;
-    border-radius: 18px;
-    background: rgba(255,255,255,0.06);
-    box-shadow: 0 0 40px rgba(0,0,0,0.6);
+    height: clamp(200px, 30vh, 280px);
+    border-radius: clamp(20px, 3vw, 32px);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
 }
+
 .track {
     display: flex;
     align-items: center;
     height: 100%;
     will-change: transform;
+    padding: 0 10px;
 }
-/* ===== ЭЛЕМЕНТ ===== */
+
 .item {
-    min-width: 140px;
-    height: 150px;
-    margin: 0 10px;
-    background: #0e1625;
-    border-radius: 18px;
+    min-width: clamp(140px, 20vw, 200px);
+    height: clamp(160px, 25vh, 220px);
+    margin: 0 clamp(8px, 1.5vw, 15px);
+    background: linear-gradient(145deg, rgba(30, 30, 60, 0.8), rgba(20, 20, 40, 0.9));
+    border-radius: clamp(18px, 2.5vw, 28px);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    padding: clamp(15px, 2vw, 25px);
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
 }
+
+.item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0) 0%, rgba(0, 102, 204, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.item:hover::before {
+    opacity: 1;
+}
+
 .item img {
-    width: 70px;
-    height: 70px;
+    width: clamp(70px, 12vw, 110px);
+    height: clamp(70px, 12vw, 110px);
     object-fit: contain;
-    margin-bottom: 8px;
+    margin-bottom: clamp(10px, 2vh, 15px);
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+    transition: transform 0.3s ease;
 }
+
+.item:hover img {
+    transform: scale(1.1) rotate(5deg);
+}
+
 .item span {
-    font-size: 13px;
-    opacity: 0.9;
+    font-size: clamp(14px, 2vw, 18px);
+    font-weight: 700;
+    opacity: 0.95;
     text-align: center;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
+
 .item.active {
-    transform: scale(1.25);
-    background: #1e90ff;
-    box-shadow: 0 0 30px #4aa3ff;
+    transform: scale(1.15);
+    background: linear-gradient(145deg, #0066cc, #e30613);
+    box-shadow: 
+        0 0 60px rgba(0, 102, 204, 0.8),
+        0 0 120px rgba(227, 6, 19, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    animation: pulse 1.5s ease-in-out infinite;
 }
-/* ===== КНОПКА ===== */
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 60px rgba(0, 102, 204, 0.8), 0 0 120px rgba(227, 6, 19, 0.5); }
+    50% { box-shadow: 0 0 80px rgba(0, 102, 204, 1), 0 0 160px rgba(227, 6, 19, 0.7); }
+}
+
 button {
-    margin-top: 25px;
-    padding: 16px 42px;
-    font-size: 20px;
-    border: none;
-    border-radius: 14px;
-    background: linear-gradient(135deg, #1e90ff, #6bb7ff);
+    padding: clamp(16px, 2.5vh, 22px) clamp(50px, 8vw, 70px);
+    font-size: clamp(18px, 2.5vw, 24px);
+    font-weight: 600;
+    border: 2px solid #0066cc;
+    border-radius: clamp(8px, 1.5vw, 12px);
+    background: #0066cc;
     color: #fff;
     cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
+
+button::before {
+    display: none;
+}
+
+button:hover {
+    background: #0052a3;
+    border-color: #0052a3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.3);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 102, 204, 0.2);
+}
+
 button:disabled {
-    opacity: 0.5;
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
 }
-/* ===== МОДАЛКА ===== */
+
 .modal {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.75);
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(12px);
     display: flex;
     justify-content: center;
     align-items: center;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.4s ease;
-    z-index: 20;
+    z-index: 1000;
+    padding: 20px;
 }
+
 .modal.show {
     opacity: 1;
     pointer-events: auto;
 }
+
 .modal-content {
-    background: #101c2f;
-    border-radius: 20px;
-    padding: 30px 40px;
+    background: linear-gradient(145deg, rgba(30, 30, 60, 0.95), rgba(20, 20, 40, 0.98));
+    border-radius: clamp(24px, 3vw, 36px);
+    padding: clamp(30px, 5vw, 50px);
     display: flex;
-    gap: 30px;
-    animation: pop 0.4s ease;
+    flex-wrap: wrap;
+    gap: clamp(20px, 3vw, 40px);
+    justify-content: center;
+    animation: modalPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 
+        0 20px 80px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 90vw;
 }
+
 .modal .item {
-    transform: scale(1.4);
+    transform: scale(1.2);
+    animation: itemPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
-@keyframes pop {
-    from { transform: scale(0.7); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+
+.modal .item:nth-child(1) { animation-delay: 0.1s; }
+.modal .item:nth-child(2) { animation-delay: 0.2s; }
+.modal .item:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes modalPop {
+    from { 
+        transform: scale(0.5) rotate(-5deg); 
+        opacity: 0; 
+    }
+    to { 
+        transform: scale(1) rotate(0deg); 
+        opacity: 1; 
+    }
+}
+
+@keyframes itemPop {
+    0% { 
+        transform: scale(0) rotate(-180deg); 
+        opacity: 0;
+    }
+    100% { 
+        transform: scale(1.2) rotate(0deg); 
+        opacity: 1;
+    }
+}
+
+/* Мобильная оптимизация */
+@media (max-width: 768px) {
+    .roulette {
+        height: clamp(180px, 28vh, 240px);
+    }
+    
+    .item {
+        min-width: clamp(120px, 25vw, 160px);
+        height: clamp(140px, 22vh, 180px);
+    }
+    
+    .modal-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .track {
+        padding: 0 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 15px;
+    }
+    
+    .item {
+        min-width: 110px;
+        height: 130px;
+        margin: 0 6px;
+    }
+    
+    .item img {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .modal .item {
+        transform: scale(1.1);
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }
 </style>
 </head>
@@ -133,104 +310,187 @@ button:disabled {
         <div class="arrow">▼</div>
         <div class="roulette" id="roulette">
             <div class="track" id="track">
-                <!-- 🔁 СПИСОК ПРОГРАММ (ОДИН РАЗ) -->
-                <div class="item"><img src="https://w7.pngwing.com/pngs/986/441/png-transparent-cryptocurrency-cardano-computer-icons-primecoin-augur-crypto-coin-aqua-privacy-policy-privacy.png"><span>БИЛЛИНГ</span></div>
-                <div class="item"><img src="https://avatars.mds.yandex.net/i?id=ebe07207e363d99ab80425d983b53975_l-5287693-images-thumbs&n=13"><span>СЭД</span></div>
-                <div class="item"><img src="https://sistemnik.pro/wp-content/uploads/2024/03/08917643-ba1b-4bad-b031-4006f8fb7d84-1-768x768.webp"><span>1С</span></div>
-                <div class="item"><img src="https://avatars.mds.yandex.net/i?id=ebe07207e363d99ab80425d983b53975_l-5287693-images-thumbs&n=13"><span>КИС ЭХД</span></div>
-		<div class="item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Verein_Deutscher_Ingenieure%2C_Logo.svg/1200px-Verein_Deutscher_Ingenieure%2C_Logo.svg.png"><span>VDI</span></div>
-		<div class="item"><img src="https://static.tildacdn.com/tild3462-3938-4363-b861-616464393535/IVA_Mobile_.png"><span>IVA</span></div>
+                <div class="item"><img src="https://w7.pngwing.com/pngs/986/441/png-transparent-cryptocurrency-cardano-computer-icons-primecoin-augur-crypto-coin-aqua-privacy-policy-privacy.png" alt="Биллинг"><span>БИЛЛИНГ</span></div>
+                <div class="item"><img src="https://avatars.mds.yandex.net/i?id=ebe07207e363d99ab80425d983b53975_l-5287693-images-thumbs&n=13" alt="СЭД"><span>СЭД</span></div>
+                <div class="item"><img src="https://sistemnik.pro/wp-content/uploads/2024/03/08917643-ba1b-4bad-b031-4006f8fb7d84-1-768x768.webp" alt="1С"><span>1С</span></div>
+                <div class="item"><img src="https://avatars.mds.yandex.net/i?id=ebe07207e363d99ab80425d983b53975_l-5287693-images-thumbs&n=13" alt="КИС ЭХД"><span>КИС ЭХД</span></div>
+                <div class="item"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Verein_Deutscher_Ingenieure%2C_Logo.svg/1200px-Verein_Deutscher_Ingenieure%2C_Logo.svg.png" alt="VDI"><span>VDI</span></div>
+                <div class="item"><img src="https://static.tildacdn.com/tild3462-3938-4363-b861-616464393535/IVA_Mobile_.png" alt="IVA"><span>IVA</span></div>
             </div>
         </div>
     </div>
     <button id="spinBtn">Узнать</button>
 </div>
-<!-- ===== МОДАЛКА ===== -->
+
 <div class="modal" id="modal">
     <div class="modal-content" id="modalContent"></div>
 </div>
+
 <script>
 const track = document.getElementById('track');
 const roulette = document.getElementById('roulette');
 const btn = document.getElementById('spinBtn');
 const modal = document.getElementById('modal');
 const modalContent = document.getElementById('modalContent');
+
+// Базовые элементы (оригинальные)
 const baseItems = Array.from(track.children);
 const baseCount = baseItems.length;
-/* 🔁 Увеличение до 8 копий для покрытия максимального сдвига */
-const original = track.innerHTML;
-track.innerHTML = original.repeat(8);
-const items = Array.from(track.children);
-let itemWidth;
+
+// Создаём достаточно копий для плавной прокрутки
+const COPIES = 10;
+track.innerHTML = track.innerHTML.repeat(COPIES);
+const allItems = Array.from(track.children);
+
+let itemWidth = 0;
+let rouletteCenter = 0;
 let spinning = false;
-/* инициализация */
+
+// Инициализация и расчёт размеров
 function init() {
-    itemWidth = items[0].offsetWidth + 20;
-    const centerFix = (roulette.offsetWidth / 2) - (itemWidth / 2);
-    const centralBase = Math.floor(baseCount / 2);
-    const initialIndex = baseCount + centralBase;
-    const startOffset = initialIndex * itemWidth - centerFix;
-    track.style.transform = `translateX(${-startOffset}px)`;
+    const firstItem = allItems[0];
+    const style = window.getComputedStyle(firstItem);
+    
+    // Полная ширина элемента включая margin
+    itemWidth = firstItem.offsetWidth + 
+                parseFloat(style.marginLeft) + 
+                parseFloat(style.marginRight);
+    
+    // Центр рулетки
+    rouletteCenter = roulette.offsetWidth / 2;
+    
+    // Стартовая позиция - центрируем средний элемент средней копии
+    const middleCopy = Math.floor(COPIES / 2);
+    const middleItem = Math.floor(baseCount / 2);
+    const startIndex = middleCopy * baseCount + middleItem;
+    
+    resetPosition(startIndex);
 }
-window.onload = init;
-window.onresize = init;
-/* функция для одного спина */
-function doSpin(used) {
+
+// Сброс позиции на указанный индекс без анимации
+function resetPosition(index) {
+    track.style.transition = 'none';
+    const offset = index * itemWidth - rouletteCenter + (itemWidth / 2);
+    track.style.transform = `translateX(${-offset}px)`;
+}
+
+// Один спин
+function doSpin(usedIndices) {
     return new Promise((resolve) => {
-        items.forEach(i => i.classList.remove('active'));
-        /* 🎯 случайный индекс в базовом списке, без повторений */
-        const available = Array.from({length: baseCount}, (_, i) => i).filter(i => !used.includes(i));
-        const baseIndex = available[Math.floor(Math.random() * available.length)];
-        /* 🔁 минимум 4 оборота + рандом 0-2 */
-        const spins = 4 + Math.floor(Math.random() * 3);
-        /* 🎯 целевой индекс */
-        const targetIndex = baseIndex + baseCount * spins;
-        const centerFix = (roulette.offsetWidth / 2) - (itemWidth / 2);
-        const targetOffset = (targetIndex * itemWidth) - centerFix;
-        track.style.transition = 'transform 4s cubic-bezier(.15,.85,.2,1)';
-        track.style.transform = `translateX(${-targetOffset}px)`;
+        // Убираем активный класс
+        allItems.forEach(item => item.classList.remove('active'));
+        
+        // Выбираем случайный элемент, исключая уже использованные
+        const availableIndices = Array.from({length: baseCount}, (_, i) => i)
+            .filter(i => !usedIndices.includes(i));
+        const targetBaseIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+        
+        // Минимум 2 полных круга + случайные обороты (итого 2-4 круга)
+        const minSpins = 2;
+        const extraSpins = Math.floor(Math.random() * 3);
+        const fullSpins = minSpins + extraSpins;
+        
+        // Текущая позиция трека
+        const currentTransform = track.style.transform;
+        const currentMatch = currentTransform.match(/translateX\((-?\d+\.?\d*)px\)/);
+        const currentOffset = currentMatch ? parseFloat(currentMatch[1]) : 0;
+        
+        // Вычисляем, сколько нужно проехать от текущей позиции
+        const currentPosition = Math.abs(currentOffset);
+        const currentIndex = Math.round(currentPosition / itemWidth);
+        
+        // Целевой индекс относительно текущей позиции
+        const targetIndex = currentIndex + (fullSpins * baseCount) + targetBaseIndex;
+        
+        // Рассчитываем точное смещение для центрирования элемента
+        const exactOffset = targetIndex * itemWidth - rouletteCenter + (itemWidth / 2);
+        
+        // Добавляем небольшое случайное смещение ПЕРЕД целевой позицией (влево)
+        // Так стрелка остановится ДО иконки, а потом докрутится до неё
+        const randomOffset = itemWidth * (0.2 + Math.random() * 0.3);
+        const offsetWithRandom = exactOffset - randomOffset; // МИНУС, чтобы остановиться раньше
+        
+        // Анимация прокрутки с остановкой НЕ доезжая до центра
+        track.style.transition = 'transform 4.5s cubic-bezier(0.17, 0.67, 0.12, 0.99)';
+        track.style.transform = `translateX(${-offsetWithRandom}px)`;
+        
         setTimeout(() => {
-            /* сброс позиции без перехода */
-            track.style.transition = 'none';
-            const effectiveIndex = baseIndex + baseCount; // +1 копия для избежания пустоты слева
-            const effectiveOffset = (effectiveIndex * itemWidth) - centerFix;
-            track.style.transform = `translateX(${-effectiveOffset}px)`;
-            /* подсветка */
-            items[effectiveIndex].classList.add('active');
-            /* пауза 1с перед следующим или модалкой */
-            setTimeout(() => resolve(baseIndex), 1000);
-        }, 4000);
+            // Быстрая докрутка до точного центра (вправо)
+            track.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            track.style.transform = `translateX(${-exactOffset}px)`;
+            
+            setTimeout(() => {
+                // Находим элемент, который сейчас под стрелкой
+                const centerPosition = Math.abs(exactOffset);
+                const centerIndex = Math.round(centerPosition / itemWidth);
+                
+                // Активируем элемент под стрелкой
+                allItems[centerIndex].classList.add('active');
+                
+                // После активации возвращаемся в безопасную зону без анимации
+                setTimeout(() => {
+                    const safeIndex = targetBaseIndex + baseCount * Math.floor(COPIES / 2);
+                    resetPosition(safeIndex);
+                    allItems[centerIndex].classList.remove('active');
+                    allItems[safeIndex].classList.add('active');
+                    
+                    // Пауза перед следующим спином или показом модалки
+                    setTimeout(() => resolve(targetBaseIndex), 800);
+                }, 100);
+            }, 300);
+        }, 4500);
     });
 }
+
+// Обработчик кнопки
 btn.onclick = async () => {
     if (spinning) return;
+    
     spinning = true;
     btn.disabled = true;
-    /* 🎲 сколько выпадет */
+    
+    // Определяем количество выпавших элементов
     const roll = Math.random();
     let count = 1;
-    if (roll < 0.01) count = 3;
-    else if (roll < 0.11) count = 2;
-    /* массив выбранных */
-    const selected = [];
+    if (roll < 0.01) count = 3;      // 1% - три элемента
+    else if (roll < 0.11) count = 2; // 10% - два элемента
+    
+    const selectedIndices = [];
+    
+    // Выполняем спины
     for (let i = 0; i < count; i++) {
-        const baseIndex = await doSpin(selected);
-        selected.push(baseIndex);
+        const baseIndex = await doSpin(selectedIndices);
+        selectedIndices.push(baseIndex);
     }
-    /* открываем модалку */
-    openModal(selected);
+    
+    // Показываем результат
+    openModal(selectedIndices);
+    
     spinning = false;
     btn.disabled = false;
 };
-function openModal(selected) {
+
+// Открытие модального окна
+function openModal(selectedIndices) {
     modalContent.innerHTML = '';
-    selected.forEach(idx => {
-        modalContent.appendChild(baseItems[idx].cloneNode(true));
+    selectedIndices.forEach(idx => {
+        const clone = baseItems[idx].cloneNode(true);
+        clone.classList.remove('active');
+        modalContent.appendChild(clone);
     });
     modal.classList.add('show');
 }
-modal.onclick = () => modal.classList.remove('show');
+
+// Закрытие модального окна
+modal.onclick = (e) => {
+    if (e.target === modal) {
+        modal.classList.remove('show');
+    }
+};
+
+// Инициализация при загрузке и изменении размера
+window.addEventListener('load', init);
+window.addEventListener('resize', init);
 </script>
 </body>
-
 </html>
