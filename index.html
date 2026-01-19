@@ -11,6 +11,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -171,6 +172,7 @@ button#spinBtn {
     box-shadow: 0 25px 50px rgba(0, 102, 204, 0.5);
     position: relative;
     overflow: hidden;
+    outline: none;
 }
 
 button#spinBtn::before {
@@ -348,6 +350,7 @@ button#spinBtn:hover {
     transform: translateY(40px);
     letter-spacing: 0.5em;
     text-transform: uppercase;
+    outline: none;
 }
 
 .modal.show .close-btn {
